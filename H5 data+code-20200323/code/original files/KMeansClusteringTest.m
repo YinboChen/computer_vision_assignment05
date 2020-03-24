@@ -1,5 +1,4 @@
 function KMeansClusteringTest(visualize)
-clc;
 % Tests your implementation of KMeansClustering.m by comparing its output
 % on a testing dataset with the output of our reference implementation on
 % the same dataset.

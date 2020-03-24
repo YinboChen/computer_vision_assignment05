@@ -45,7 +45,13 @@ function idx = KMeansClustering(X, k, visualize2D, centers)
         %                            YOUR CODE HERE                           %
         %                                                                     %
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        
+        random_row_k = randperm(m,k);
+%         a row vector containing k from 1 to m
+        for i = 1: k
+                centers(i,:) = X(random_row_k(i),:);
+%                 centers size is k*n ,
+        end      
+
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %                                                                     %
         %                            END YOUR CODE                            %
@@ -71,12 +77,23 @@ function idx = KMeansClustering(X, k, visualize2D, centers)
         
         % Compute distances from each point to the centers and assign each
         % point to the closest cluster.
+%         computing min distance bw X(m,:), centers(k,:) 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %                                                                     %
         %                            YOUR CODE HERE                           %
         %                                                                     %
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
+        for j = 1: m
+            min_temp = inf;
+            for q = 1:k
+                min_distance = norm(X(j,:)-centers(q,:));
+                if min_distance < min_temp
+                    min_temp = min_distance;
+                    closest_cluster = q;
+                end
+            end
+            idx(j)= closest_cluster;
+        end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %                                                                     %
         %                            END YOUR CODE                            %
@@ -94,6 +111,18 @@ function idx = KMeansClustering(X, k, visualize2D, centers)
         %                            YOUR CODE HERE                           %
         %                                                                     %
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        for g = 1:k
+            sum = zeros(1,n);
+            %1*n array
+            count = 0;
+            for h = 1:m
+                if idx(h)== g
+                    sum = sum+X(h,:);
+                    count = count+1;
+                end 
+            end
+            centers(g,:)= sum./count;
+        end
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %                                                                     %
