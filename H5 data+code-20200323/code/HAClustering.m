@@ -1,4 +1,12 @@
 function idx = HAClustering(X, k, visualize2D)
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CSCI 5722 Computer Vision
+% Name: Yinbo Chen
+% Professor: Ioana Fleming
+% Assignment: HW5 
+% Purpose: Segmentation
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Run the hierarchical agglomerative clustering algorithm.
 % 
 % The algorithm is conceptually simple:
@@ -82,6 +90,8 @@ function idx = HAClustering(X, k, visualize2D)
     dists = squareform(pdist(centroids));
     dists = dists + diag(Inf(m, 1));
     
+%     size(dists)
+    
     % If we are going to display the clusters graphically then create a
     % figure in which to draw the visualization.
     figHandle = [];
@@ -108,6 +118,13 @@ function idx = HAClustering(X, k, visualize2D)
         %                            YOUR CODE HERE                           %
         %                                                                     %
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        [min_dists,C_index] = min(dists);
+%         the min distances value and column index
+        [~,R_index] = min(min_dists);
+%         distance value and row index
+        
+        i= R_index;
+        j= C_index;
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %                                                                     %
@@ -135,7 +152,8 @@ function idx = HAClustering(X, k, visualize2D)
         %                            YOUR CODE HERE                           %
         %                                                                     %
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%      
-        
+        idx(find(idx == j)) = idx(i);
+%         assign cluster j  to cluster i
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %                                                                     %
         %                            END YOUR CODE                            %
@@ -151,6 +169,12 @@ function idx = HAClustering(X, k, visualize2D)
         %                            YOUR CODE HERE                           %
         %                                                                     %
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        centroid_i_j = [centroids(i,:);centroids(j,:)];
+%         combine center cluster i and cluster j  for computing mean
+        centroid_new_mean = mean(centroid_i_j);
+%         new center
+        centroids(i,:)= centroid_new_mean;
+        centroids(j,:) = Inf;
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %                                                                     %
@@ -164,6 +188,8 @@ function idx = HAClustering(X, k, visualize2D)
         %                            YOUR CODE HERE                           %
         %                                                                     %
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        cluster_sizes(i)= cluster_sizes(i)+cluster_sizes(j);
+        cluster_sizes(j)= 0;
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %                                                                     %
@@ -180,7 +206,13 @@ function idx = HAClustering(X, k, visualize2D)
         %                            YOUR CODE HERE                           %
         %                                                                     %
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        dists(i,:)= pdist2(centroids(i,:),centroids);
         
+        dists(i,i)= Inf;
+        dists(j,:)= Inf;
+%         clean cluster j to all
+        dists(:,j)= Inf;
+%         clean all to j
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %                                                                     %
         %                            END YOUR CODE                            %

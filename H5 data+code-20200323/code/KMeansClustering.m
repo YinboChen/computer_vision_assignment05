@@ -1,4 +1,12 @@
 function idx = KMeansClustering(X, k, visualize2D, centers)
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CSCI 5722 Computer Vision
+% Name: Yinbo Chen
+% Professor: Ioana Fleming
+% Assignment: HW5 
+% Purpose: Segmentation
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Run the k-means clustering algorithm.
 %
 % INPUTS
