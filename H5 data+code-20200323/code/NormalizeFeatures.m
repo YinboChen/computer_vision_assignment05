@@ -1,4 +1,12 @@
 function featuresNorm = NormalizeFeatures(features)
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CSCI 5722 Computer Vision
+% Name: Yinbo Chen
+% Professor: Ioana Fleming
+% Assignment: HW5 
+% Purpose: Segmentation
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Normalize image features to have zero mean and unit variance. This
 % normalization can cause k-means clustering to perform better.
 %
@@ -21,4 +29,7 @@ function featuresNorm = NormalizeFeatures(features)
 %                HINT: The functions mean and std may be useful                %
 %                                                                              %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+u_j = mean(features,1:2);
+sig_j = std(features,0,1:2);
+featuresNorm = (features-u_j)./sig_j;
 end

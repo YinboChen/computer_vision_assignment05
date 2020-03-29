@@ -1,9 +1,9 @@
 % Read the input images. 
-img = imread('../imgs/cat_mouse.jpg');
+img = imread('../imgs//black_kitten_star.jpg');
 background = imread('../imgs/backgrounds/beach.jpg');
 
 % Choose the number of clusters and the clustering method.
-k = 5;
+k = 3;
 clusteringMethod = 'kmeans';
 
 % Choose the feature function that will be used. The @ syntax creates a

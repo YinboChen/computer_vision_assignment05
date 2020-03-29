@@ -118,13 +118,15 @@ function idx = HAClustering(X, k, visualize2D)
         %                            YOUR CODE HERE                           %
         %                                                                     %
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        
         [min_dists,C_index] = min(dists);
 %         the min distances value and column index
         [~,R_index] = min(min_dists);
 %         distance value and row index
         
-        i= R_index;
-        j= C_index;
+
+        i= C_index(R_index);
+        j= R_index;
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %                                                                     %
@@ -152,7 +154,7 @@ function idx = HAClustering(X, k, visualize2D)
         %                            YOUR CODE HERE                           %
         %                                                                     %
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%      
-        idx(find(idx == j)) = idx(i);
+        idx(find(idx == j)) = i;
 %         assign cluster j  to cluster i
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %                                                                     %
@@ -169,13 +171,11 @@ function idx = HAClustering(X, k, visualize2D)
         %                            YOUR CODE HERE                           %
         %                                                                     %
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        centroid_i_j = [centroids(i,:);centroids(j,:)];
-%         combine center cluster i and cluster j  for computing mean
-        centroid_new_mean = mean(centroid_i_j);
-%         new center
-        centroids(i,:)= centroid_new_mean;
-        centroids(j,:) = Inf;
-        
+        i_size = cluster_sizes(i);
+        j_size = cluster_sizes(j);
+        centroids(i,:) = (i_size*centroids(i,:) + j_size*centroids(j,:)) / (i_size+j_size);
+%         computing the mean
+        centroids(j,:) = inf;
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %                                                                     %
         %                            END YOUR CODE                            %
@@ -207,12 +207,14 @@ function idx = HAClustering(X, k, visualize2D)
         %                                                                     %
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         dists(i,:)= pdist2(centroids(i,:),centroids);
-        
-        dists(i,i)= Inf;
-        dists(j,:)= Inf;
-%         clean cluster j to all
-        dists(:,j)= Inf;
+        dists(:,i) = dists(i,:)';
+        dists(i,i)= inf;
+        dists(j,:)= inf;
+%         clean  j to all
+        dists(:,j)= inf;
 %         clean all to j
+
+
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %                                                                     %
         %                            END YOUR CODE                            %
