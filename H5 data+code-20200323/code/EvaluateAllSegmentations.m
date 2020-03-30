@@ -1,3 +1,5 @@
+clc;
+clear all;
 % Quantitatively evaluate a segmentation method by comparing its computed
 % segments against ground truth foreground-background segmentations.
 
@@ -7,10 +9,33 @@
 load('../cats.mat');
 
 % Set the parameters for segmentation.
-numClusters = 5;
-clusteringMethod = 'hac';
-featureFn = @ComputeColorFeatures;
-normalizeFeatures = true;
+numClusters = 2;
+
+cm =2;
+if cm == 1
+    clusteringMethod = 'hac';
+elseif cm ==2
+    clusteringMethod = 'kmeans';
+end
+% clusteringMethod = 'kmeans';
+% clusteringMethod = 'hac';
+
+F =1;
+   if F ==1
+       featureFn = @ComputeColorFeatures;
+   elseif F ==2
+       featureFn = @ComputeFeatures;
+   elseif F ==3
+       featureFn = @ComputePositionColorFeatures;
+   elseif F ==4
+       featureFn = @ComputeGradientFeatures;
+   end
+
+% featureFn = @ComputeColorFeatures;
+% featureFn = @ComputeFeatures;
+% featureFn = @ComputePositionColorFeatures;
+
+normalizeFeatures = false;
 
 % Since the images are different sizes, we specify a maximum number of
 % pixels that we want to cluster and then use this to determine the resize
@@ -33,7 +58,7 @@ for i = 1:length(imageNames)
     numPixels = height * width;
     
     % Determine the amount of resize required for this image.
-    resize = 0.2;
+    resize = 1;
     if numPixels > maxPixels
         resize = sqrt(maxPixels / numPixels);
     end
